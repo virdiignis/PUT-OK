@@ -1,0 +1,15 @@
+//
+// Created by prance on 04.12.18.
+//
+
+#ifndef OK_TUNING_HPP
+#define OK_TUNING_HPP
+
+#define TASKS_NO 50
+#define MIN_OP_DURATION 1
+#define MAX_OP_DURATION 10
+#define MIN_MAITENANCE_START 0
+#define MIN_MAITENANCE_DURATION 1
+#define MAX_MAITENANCE_DURATION 100
+
+#endif //OK_TUNING_HPP
