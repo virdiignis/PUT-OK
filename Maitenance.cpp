@@ -3,3 +3,5 @@
 //
 
 #include "Maitenance.hpp"
+
+Maitenance::Maitenance(unsigned int start_time, unsigned int duration) : Employ(start_time, duration) {}

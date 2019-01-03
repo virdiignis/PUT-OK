@@ -14,6 +14,16 @@
 
 class Machine {
     bool number = false;
+public:
+    explicit Machine(bool number);
+
+    void add_maitenance(Maitenance*);
+    Operation* operator[](int x);
+    int score();
+
+    const std::vector<Maitenance *> &getMaitenances() const;
+
+private:
     std::array<Operation*, TASKS_NO> operations;
     std::vector<Maitenance*> maitenances;
 

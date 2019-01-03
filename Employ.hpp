@@ -10,11 +10,14 @@ class Employ {
 public:
     Employ(unsigned int start_time, unsigned int duration);
 
+    virtual void setStart_time(unsigned int start_time);
+
+    unsigned int getStart_time() const;
+
+    unsigned int getDuration() const;
+
 protected:
     unsigned start_time, duration;
 };
-
-Employ::Employ(unsigned int start_time, unsigned int duration) : start_time(start_time), duration(duration) {}
-
 
 #endif //OK_EMPLOY_HPP

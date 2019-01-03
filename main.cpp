@@ -1,6 +1,8 @@
 #include <iostream>
+#include "Instance.hpp"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Instance i = Instance();
+    i.toFile(1, "/home/prance/CLionProjects/PUT-OK/ins1.txt");
     return 0;
 }

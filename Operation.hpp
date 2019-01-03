@@ -8,11 +8,15 @@
 
 #include "Employ.hpp"
 #include "Task.hpp"
+#include "Exceptions.hpp"
+
+class Task;
 
 class Operation : public Employ {
 private:
     unsigned penalty = 0;
     bool machine;
+    bool number;
     Task *task;
 public:
     /***
@@ -23,8 +27,22 @@ public:
      * @param machine
      * @param task
      */
-    Operation(unsigned int start_time, unsigned int duration, unsigned int penalty, bool machine,
+    Operation(unsigned int start_time, unsigned int duration, unsigned int penalty, bool machine, bool number,
                   Task *task);
+
+    bool getMachine() const;
+
+    int getEnd();
+
+    void setStart_time(unsigned int start_time);
+
+    unsigned int getPenalty() const;
+
+    bool isMachine() const;
+
+    bool isNumber() const;
+
+    Task *getTask() const;
 };
 
 

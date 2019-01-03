@@ -10,19 +10,21 @@
 #include "Machine.hpp"
 
 class Instance {
-    Machine machine1, machine2;
+    Machine machine1 = Machine(0), machine2 = Machine(1);
     std::array<Task*, TASKS_NO> tasks;
     std::default_random_engine generator;
-    std::uniform_int_distribution<unsigned> duration = std::uniform_int_distribution<unsigned>(MIN_OP_DURATION,MAX_OP_DURATION);
-    std::uniform_int_distribution<bool> machine = std::uniform_int_distribution<bool>();
-    std::uniform_int_distribution<unsigned> ready_time = std::uniform_int_distribution<unsigned>(0, (MIN_OP_DURATION + MAX_OP_DURATION)/2 * TASKS_NO);
+    std::uniform_int_distribution<unsigned> durationDist = std::uniform_int_distribution<unsigned>(MIN_OP_DURATION,MAX_OP_DURATION);
+    std::uniform_int_distribution<unsigned > machineDist = std::uniform_int_distribution<unsigned>(0, 1);
+    std::uniform_int_distribution<unsigned> ready_timeDist = std::uniform_int_distribution<unsigned>(0, (MIN_OP_DURATION + MAX_OP_DURATION)/2 * TASKS_NO);
 
     void generateTasks();
     Task * generateTask();
-    void generateMachines();
     void sortTasks();
     void generateMaitenances();
 
+public:
+    Instance();
+    void toFile(int, std::string);
 };
 
 
