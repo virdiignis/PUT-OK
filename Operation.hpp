@@ -34,7 +34,7 @@ public:
 
     int getEnd();
 
-    void setStart_time(unsigned int start_time);
+    void setStart_time(unsigned int start_time) override;
 
     unsigned int getPenalty() const;
 

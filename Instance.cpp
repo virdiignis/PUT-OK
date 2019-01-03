@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-msc32-c"
 //
 // Created by prance on 04.12.18.
 //
@@ -15,7 +17,7 @@ Instance::Instance() {
 
 Task *Instance::generateTask() {
     auto t = new Task;
-    bool machine_swap = static_cast<bool>(machineDist(generator));
+    auto machine_swap = static_cast<bool>(machineDist(generator));
     t->setOp1(new Operation(0, durationDist(generator), 0, machine_swap, 0, t));
     t->setOp2(new Operation(0, durationDist(generator), 0, !machine_swap, 1, t));
     t->setReady_time(ready_timeDist(generator));
@@ -58,3 +60,5 @@ void Instance::toFile(const int number, const std::string filename) {
     ofstream.close();
 }
 
+
+#pragma clang diagnostic pop

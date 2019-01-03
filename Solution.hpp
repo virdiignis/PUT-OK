@@ -14,7 +14,7 @@ private:
     Machine machine1 = Machine(0), machine2 = Machine(1);
 
 public:
-    Solution(const Instance& instance);
+    explicit Solution(const Instance& instance);
     Solution(const Solution& solution1, const Solution &solution2);
     Solution(const Solution& solution);
 

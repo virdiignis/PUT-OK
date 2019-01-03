@@ -5,7 +5,9 @@
 #include "Solution.hpp"
 
 Solution::Solution(const Instance &instance) {
-    //generate random solution for the instance;
+    //TODO get operations from instance tasks into random constraint order in machines.
+
+    //generate random solution for the instance
 }
 
 Solution::Solution(const Solution &solution1, const Solution &solution2) {
