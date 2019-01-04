@@ -17,15 +17,19 @@ class Machine {
 public:
     explicit Machine(bool number);
 
-    void add_maitenance(Maitenance*);
-    Operation* operator[](int x);
+    void add_maitenance(Maitenance *);
+
+    Operation *&operator[](int x);
+
     int score();
 
     const std::vector<Maitenance *> &getMaitenances() const;
 
+    void calculate();
+
 private:
-    std::array<Operation*, TASKS_NO> operations;
-    std::vector<Maitenance*> maitenances;
+    std::array<Operation *, TASKS_NO> operations;
+    std::vector<Maitenance *> maitenances;
 
 };
 

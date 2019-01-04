@@ -60,5 +60,17 @@ void Instance::toFile(const int number, const std::string filename) {
     ofstream.close();
 }
 
+const Machine &Instance::getMachine1() const {
+    return machine1;
+}
+
+const Machine &Instance::getMachine2() const {
+    return machine2;
+}
+
+const std::array<Task *, 50> &Instance::getTasks() const {
+    return tasks;
+}
+
 
 #pragma clang diagnostic pop

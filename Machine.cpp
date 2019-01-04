@@ -10,7 +10,7 @@ void Machine::add_maitenance(Maitenance *m) {
     maitenances.push_back(m);
 }
 
-Operation *Machine::operator[](int x) {
+Operation *&Machine::operator[](int x) {
     return operations[x];
 }
 
@@ -22,5 +22,9 @@ int Machine::score() {
 
 const std::vector<Maitenance *> &Machine::getMaitenances() const {
     return maitenances;
+}
+
+void Machine::calculate() {
+
 }
 

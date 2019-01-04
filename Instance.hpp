@@ -25,6 +25,12 @@ class Instance {
 public:
     Instance();
     void toFile(int, std::string);
+
+    const Machine &getMachine1() const;
+
+    const Machine &getMachine2() const;
+
+    const std::array<Task *, 50> &getTasks() const;
 };
 
 
