@@ -70,6 +70,10 @@ Solution::Solution(const Solution &solution) {
 }
 
 void Solution::calculate() {
+    for (int i = 0; i < TASKS_NO; ++i) {
+        machine1[i]->resetPenalty();
+        machine2[i]->resetPenalty();
+    }
     unsigned m1 = 0, m2 = 0, lastm1 = 0, lastm2 = 0;
     bool op1s[TASKS_NO] = {false};
     while (m1 < TASKS_NO || m2 < TASKS_NO) {
