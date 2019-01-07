@@ -21,13 +21,15 @@ public:
 
     Operation *&operator[](unsigned int x);
 
-    unsigned int score();
+    unsigned int score() const;
 
     const std::vector<Maitenance *> &getMaitenances() const;
 
     unsigned getSize();
 
     void sort_maitenances();
+
+    Machine copy();
 
 private:
     std::array<Operation *, TASKS_NO> operations;

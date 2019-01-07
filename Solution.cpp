@@ -4,10 +4,11 @@
 
 #include <set>
 #include <algorithm>
+#include <iostream>
 #include "Solution.hpp"
 
-Solution::Solution(const Instance &instance) {
-    generator.seed(static_cast<unsigned long>(time(nullptr)));
+Solution::Solution(Instance &instance) {
+    this->instance = &instance;
     machine1 = instance.getMachine1();
     machine2 = instance.getMachine2();
     bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
@@ -18,8 +19,8 @@ Solution::Solution(const Instance &instance) {
         order1.push_back(j);
         order2.push_back(j);
     }
-    std::shuffle(order1.begin(), order1.end(), generator);
-    std::shuffle(order2.begin(), order2.end(), generator);
+    std::shuffle(order1.begin(), order1.end(), this->instance->generator);
+    std::shuffle(order2.begin(), order2.end(), this->instance->generator);
     while (!order1.empty() || !order2.empty()) {
         auto it = order1.begin();
         while (it != order1.end()) {
@@ -58,13 +59,13 @@ Solution::Solution(const Instance &instance) {
 }
 
 Solution::Solution(const Solution &solution1, const Solution &solution2) {
-    generator = solution1.generator;
-    //generate solution from two parents
+
+
 }
 
 Solution::Solution(const Solution &solution) {
     //copy solution
-    generator = solution.generator;
+    this->instance = solution.instance;
     machine1 = solution.machine1;
     machine2 = solution.machine2;
 }
@@ -116,7 +117,7 @@ void Solution::calculate() {
     }
 }
 
-unsigned Solution::getScore() {
+unsigned Solution::getScore() const {
     return machine1.score() + machine2.score();
 }
 
@@ -124,8 +125,8 @@ void Solution::mutate() {
     std::uniform_int_distribution<unsigned> taskNoDist = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 2);
     unsigned i=0;
     while (true) {
-        Machine *machine = static_cast<bool>(booleanDist(generator)) ? &machine1 : &machine2;
-        const unsigned n = taskNoDist(generator);
+        Machine *machine = static_cast<bool>(booleanDist(instance->generator)) ? &machine1 : &machine2;
+        const unsigned n = taskNoDist(instance->generator);
         auto opn = (*machine)[n];
         (*machine)[n] = (*machine)[n + 1];
         (*machine)[n + 1] = opn;
@@ -141,4 +142,12 @@ void Solution::mutate() {
             if(i++ == 100) break;
         }
     }
+}
+
+bool Solution::operator<(const Solution &rhs) const {
+    return getScore() < rhs.getScore();
+}
+
+Solution::Solution() {
+
 }

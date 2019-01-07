@@ -11,17 +11,21 @@
 class Solution {
 private:
     Machine machine1 = Machine(0), machine2 = Machine(1);
-    std::default_random_engine generator;
+    Instance *instance;
     std::uniform_int_distribution<unsigned> booleanDist = std::uniform_int_distribution<unsigned>(0, 1);
     void calculate();
 
 public:
-    explicit Solution(const Instance& instance);
+    Solution();
+
+    explicit Solution(Instance &instance);
     Solution(const Solution& solution1, const Solution &solution2);
     Solution(const Solution& solution);
-    unsigned getScore();
+
+    unsigned getScore() const;
     void mutate();
 
+    bool operator<(const Solution &rhs) const;
 
 
 };

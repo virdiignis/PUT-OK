@@ -15,9 +15,9 @@ Operation *&Machine::operator[](unsigned int x) {
     return operations[x];
 }
 
-unsigned int Machine::score() {
+unsigned int Machine::score() const {
     unsigned sum = 0;
-    for (auto o: operations) sum += o->getEnd();
+    for (const auto &o: operations) sum += o->getEnd();
     return sum;
 }
 
@@ -32,5 +32,11 @@ unsigned Machine::getSize() {
 void Machine::sort_maitenances() {
     std::sort(maitenances.begin(), maitenances.end(), [](Maitenance *a, Maitenance *b) { return a->getStartTime() <
             b->getStartTime(); });
+}
+
+Machine Machine::copy() {
+    auto m = Machine(number);
+    m.maitenances = maitenances;
+    m.operations =
 }
 

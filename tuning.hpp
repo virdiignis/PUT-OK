@@ -16,4 +16,5 @@
 #define SWAPS_MAX 1000
 
 #define MAITENANCES_NO 10
+#define GENERATION_SIZE 100
 #endif //OK_TUNING_HPP

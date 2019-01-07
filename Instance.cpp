@@ -62,11 +62,11 @@ void Instance::toFile(const int number, const std::string filename) {
 }
 
 const Machine &Instance::getMachine1() const {
-    return machine1;
+    return machine1.copy();
 }
 
 const Machine &Instance::getMachine2() const {
-    return machine2;
+    return machine2.copy();
 }
 
 const std::array<Task *, 50> &Instance::getTasks() const {
