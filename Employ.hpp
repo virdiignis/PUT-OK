@@ -10,11 +10,13 @@ class Employ {
 public:
     Employ(unsigned int start_time, unsigned int duration);
 
-    virtual void setStart_time(unsigned int start_time);
+    virtual void setStartTime(unsigned int start_time);
 
-    unsigned int getStart_time() const;
+    unsigned int getStartTime() const;
 
     unsigned int getDuration() const;
+
+    unsigned getEnd() const;
 
 protected:
     unsigned start_time, duration;

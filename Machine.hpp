@@ -19,13 +19,15 @@ public:
 
     void add_maitenance(Maitenance *);
 
-    Operation *&operator[](int x);
+    Operation *&operator[](unsigned int x);
 
-    int score();
+    unsigned int score();
 
     const std::vector<Maitenance *> &getMaitenances() const;
 
-    void calculate();
+    unsigned getSize();
+
+    void sort_maitenances();
 
 private:
     std::array<Operation *, TASKS_NO> operations;

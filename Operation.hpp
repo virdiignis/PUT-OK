@@ -9,6 +9,7 @@
 #include "Employ.hpp"
 #include "Task.hpp"
 #include "Exceptions.hpp"
+#include "Maitenance.hpp"
 
 class Task;
 
@@ -29,20 +30,28 @@ public:
      */
     Operation(unsigned int start_time, unsigned int duration, unsigned int penalty, bool machine, bool number,
                   Task *task);
+unsigned getTaskNo();
+
 
     bool getMachine() const;
 
-    int getEnd();
+    unsigned int getEnd();
 
-    void setStart_time(unsigned int start_time) override;
+    void setStartTime(unsigned int start_time) override;
 
     unsigned int getPenalty() const;
 
     bool isMachine() const;
 
-    bool isNumber() const;
+    bool isSecond() const;
 
     Task *getTask() const;
+
+    unsigned getReadyTime();
+
+    void disturbed(Maitenance*&);
+
+    void resetPenalty();
 };
 
 

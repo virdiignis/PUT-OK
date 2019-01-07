@@ -9,27 +9,27 @@
 #include "Instance.hpp"
 
 Instance::Instance() {
-//    generator.seed(static_cast<unsigned long>(time(nullptr)));
+    generator.seed(static_cast<unsigned long>(time(nullptr)));
     generateTasks();
     sortTasks();
     generateMaitenances();
 }
 
-Task *Instance::generateTask() {
-    auto t = new Task;
+Task *Instance::generateTask(unsigned i) {
+    auto t = new Task(i);
     auto machine_swap = static_cast<bool>(machineDist(generator));
     t->setOp1(new Operation(0, durationDist(generator), 0, machine_swap, 0, t));
     t->setOp2(new Operation(0, durationDist(generator), 0, !machine_swap, 1, t));
-    t->setReady_time(ready_timeDist(generator));
+    t->setReadyTime(ready_timeDist(generator));
     return t;
 }
 
 void Instance::generateTasks() {
-    for (int i = 0; i < TASKS_NO; ++i) tasks[i] = generateTask();
+    for (int i = 0; i < TASKS_NO; ++i) tasks[i] = generateTask(i);
 }
 
 void Instance::sortTasks() {
-    std::sort(tasks.begin(), tasks.end(), [](Task *a, Task *b) { return a->getReady_time() < b->getReady_time(); });
+    std::sort(tasks.begin(), tasks.end(), [](Task *a, Task *b) { return a->getReadyTime() < b->getReadyTime(); });
 }
 
 void Instance::generateMaitenances() {
@@ -43,6 +43,7 @@ void Instance::generateMaitenances() {
     for (int i = 0; i < MAITENANCES_NO; ++i) {
         machine1.add_maitenance(new Maitenance(maitenance_start(generator), maitenance_duration(generator)));
     }
+    machine1.sort_maitenances();
 
 
 }
@@ -53,10 +54,10 @@ void Instance::toFile(const int number, const std::string filename) {
     ofstream << TASKS_NO << "\n";
     for (auto t: tasks)
         ofstream << t->getOp1()->getDuration() << ";" << t->getOp2()->getDuration() << ";" << t->getOp1()->getMachine()
-                 << ";" << t->getOp2()->getMachine() << ";" << t->getReady_time() << "\n";
+                 << ";" << t->getOp2()->getMachine() << ";" << t->getReadyTime() << "\n";
     int i = 0;
     for (auto m: machine1.getMaitenances())
-        ofstream << i++ << ";0;" << m->getDuration() << ";" << m->getStart_time() << "\n";
+        ofstream << i++ << ";0;" << m->getDuration() << ";" << m->getStartTime() << "\n";
     ofstream.close();
 }
 

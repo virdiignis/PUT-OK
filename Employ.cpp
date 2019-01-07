@@ -4,11 +4,11 @@
 
 #include "Employ.hpp"
 
-void Employ::setStart_time(unsigned int start_time) {
+void Employ::setStartTime(unsigned int start_time) {
     Employ::start_time = start_time;
 }
 
-unsigned int Employ::getStart_time() const {
+unsigned int Employ::getStartTime() const {
     return start_time;
 }
 
@@ -17,5 +17,9 @@ unsigned int Employ::getDuration() const {
 }
 
 Employ::Employ(unsigned int start_time, unsigned int duration) : start_time(start_time), duration(duration) {}
+
+unsigned Employ::getEnd() const {
+    return start_time + duration;
+}
 
 

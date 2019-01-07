@@ -13,10 +13,16 @@ class Task {
 private:
     Operation *op1 = nullptr, *op2 = nullptr;
     unsigned ready_time = 0;
-public:
-    unsigned int getReady_time() const;
+    unsigned number;
 
-    void setReady_time(unsigned int ready_time);
+public:
+    Task(unsigned int number);
+
+    unsigned int getNumber() const;
+
+    unsigned int getReadyTime() const;
+
+    void setReadyTime(unsigned int ready_time);
 
     Operation *getOp1() const;
 

@@ -15,7 +15,7 @@ Operation *Task::m2() {
     return op2;
 }
 
-unsigned int Task::getReady_time() const {
+unsigned int Task::getReadyTime() const {
     return ready_time;
 }
 
@@ -35,7 +35,7 @@ Operation *Task::getOp2() const {
     return op2;
 }
 
-void Task::setReady_time(unsigned int ready_time) {
+void Task::setReadyTime(unsigned int ready_time) {
     Task::ready_time = ready_time;
 }
 
@@ -43,4 +43,10 @@ Operation *Task::other(Operation * op) {
     if(op == op1) return op2;
     if(op == op2) return op1;
     throw std::runtime_error("operation calling for other is not part of a task");
+}
+
+Task::Task(unsigned int number) : number(number) {}
+
+unsigned int Task::getNumber() const {
+    return number;
 }

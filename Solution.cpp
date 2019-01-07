@@ -2,46 +2,139 @@
 // Created by prance on 27.12.18.
 //
 
+#include <set>
+#include <algorithm>
 #include "Solution.hpp"
 
 Solution::Solution(const Instance &instance) {
-    //TODO get operations from instance tasks into random constraint order in machines.
+    generator.seed(static_cast<unsigned long>(time(nullptr)));
     machine1 = instance.getMachine1();
     machine2 = instance.getMachine2();
-    unsigned i=0;
-    for (auto task: instance.getTasks()){
-        machine1[i] = task->m1();
-        machine2[i++] = task->m2();
+    bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
+    std::uniform_int_distribution<unsigned> operationsRange = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 1);
+    unsigned n = 0, m1 = 0, m2 = 0;
+    std::vector<unsigned> order1, order2;
+    for (unsigned j = 0; j < TASKS_NO; ++j) {
+        order1.push_back(j);
+        order2.push_back(j);
     }
-    std::uniform_int_distribution<unsigned > operationsRange = std::uniform_int_distribution<unsigned>(0, instance.getTasks().size());
-    for(i=0; i < randomnessDistribution(generator); i++) {
-        auto n1 = operationsRange(generator);
-        auto n2 = operationsRange(generator);
-        auto p = machine1[n1];
-        machine1[n1] = machine1[n2];
-        machine1[n2] = p;
-
-        n1 = operationsRange(generator);
-        n2 = operationsRange(generator);
-        p = machine2[n1];
-        machine2[n1] = machine2[n2];
-        machine2[n2] = p;
-
-        machine1.calculate();
-        machine2.calculate();
-
+    std::shuffle(order1.begin(), order1.end(), generator);
+    std::shuffle(order2.begin(), order2.end(), generator);
+    while (!order1.empty() || !order2.empty()) {
+        auto it = order1.begin();
+        while (it != order1.end()) {
+            n = *it;
+            if (!instance.getTasks()[n]->m1()->isSecond() && !ops1[n]) {
+                ops1[n] = true;
+                machine1[m1++] = instance.getTasks()[n]->m1();
+                order1.erase(it);
+                break;
+            } else if (instance.getTasks()[n]->m1()->isSecond() && ((ops1[n] && !ops2[n]) || m1 == 48)) {
+                ops2[n] = true;
+                machine1[m1++] = instance.getTasks()[n]->m1();
+                order1.erase(it);
+                break;
+            }
+            it++;
+        }
+        it = order2.begin();
+        while (it != order2.end()) {
+            n = *it;
+            if (!instance.getTasks()[n]->m2()->isSecond() && !ops1[n]) {
+                ops1[n] = true;
+                machine2[m2++] = instance.getTasks()[n]->m2();
+                order2.erase(it);
+                break;
+            } else if (instance.getTasks()[n]->m2()->isSecond() && ops1[n] && !ops2[n]) {
+                ops2[n] = true;
+                machine2[m2++] = instance.getTasks()[n]->m2();
+                order2.erase(it);
+                break;
+            }
+            it++;
+        }
     }
-
-
-    //generate random solution for the instance
+    calculate();
 }
 
 Solution::Solution(const Solution &solution1, const Solution &solution2) {
+    generator = solution1.generator;
     //generate solution from two parents
 }
 
 Solution::Solution(const Solution &solution) {
     //copy solution
+    generator = solution.generator;
     machine1 = solution.machine1;
     machine2 = solution.machine2;
+}
+
+void Solution::calculate() {
+    unsigned m1 = 0, m2 = 0, lastm1 = 0, lastm2 = 0;
+    bool op1s[TASKS_NO] = {false};
+    while (m1 < TASKS_NO || m2 < TASKS_NO) {
+        while (m1 < TASKS_NO && (!machine1[m1]->isSecond() || op1s[machine1[m1]->getTaskNo()])) {
+            auto opm1 = machine1[m1];
+            if (!op1s[machine1[m1]->getTaskNo()]) { //means that's first operation
+                op1s[machine1[m1]->getTaskNo()] = true;
+                if (m1) opm1->setStartTime(std::max(opm1->getReadyTime(), machine1[m1 - 1]->getEnd() + 1));
+                else opm1->setStartTime(opm1->getReadyTime());
+            } else {
+                if (m1)
+                    opm1->setStartTime(
+                            std::max(machine1[m1 - 1]->getEnd() + 1, opm1->getTask()->other(opm1)->getEnd()+1));
+                else opm1->setStartTime(opm1->getTask()->other(opm1)->getEnd()+1);
+            }
+            for (auto m: machine1.getMaitenances()) {
+                if (m->getStartTime() == opm1->getStartTime()) opm1->setStartTime(m->getEnd() + 1);
+                if (opm1->getStartTime() < m->getStartTime() && opm1->getEnd() >= m->getStartTime()) opm1->disturbed(m);
+            }
+            m1++;
+        }
+
+        while (m2 < TASKS_NO && (!machine2[m2]->isSecond() || op1s[machine2[m2]->getTaskNo()])) {
+            auto opm2 = machine2[m2];
+            if (!op1s[machine2[m2]->getTaskNo()]) { //means that's first operation
+                op1s[machine2[m2]->getTaskNo()] = true;
+                if (m2) opm2->setStartTime(std::max(opm2->getReadyTime(), machine2[m2 - 1]->getEnd() + 1));
+                else opm2->setStartTime(opm2->getReadyTime());
+            } else {
+                if (m2)
+                    opm2->setStartTime(
+                            std::max(machine2[m2 - 1]->getEnd() + 1, opm2->getTask()->other(opm2)->getEnd() + 1));
+                else opm2->setStartTime(opm2->getTask()->other(opm2)->getEnd() + 1);
+            }
+            m2++;
+        }
+        if (lastm1 == m1 && lastm2 == m2) throw std::runtime_error("Invalid order of operations");
+        lastm1 = m1;
+        lastm2 = m2;
+    }
+}
+
+unsigned Solution::getScore() {
+    return machine1.score() + machine2.score();
+}
+
+void Solution::mutate() {
+    std::uniform_int_distribution<unsigned> taskNoDist = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 2);
+    unsigned i=0;
+    while (true) {
+        Machine *machine = static_cast<bool>(booleanDist(generator)) ? &machine1 : &machine2;
+        const unsigned n = taskNoDist(generator);
+        auto opn = (*machine)[n];
+        (*machine)[n] = (*machine)[n + 1];
+        (*machine)[n + 1] = opn;
+        try {
+            calculate();
+            break;
+        }
+        catch (std::runtime_error &e) {
+            opn = (*machine)[n];
+            (*machine)[n] = (*machine)[n + 1];
+            (*machine)[n + 1] = opn;
+            calculate();
+            if(i++ == 100) break;
+        }
+    }
 }
