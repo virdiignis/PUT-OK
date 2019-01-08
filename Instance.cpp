@@ -45,8 +45,6 @@ void Instance::generateMaitenances() {
         machine1.add_maitenance(new Maitenance(maitenance_start(generator), maitenance_duration(generator)));
     }
     machine1.sortMaitenances();
-
-
 }
 
 void Instance::toFile(const int number, const std::string filename) {

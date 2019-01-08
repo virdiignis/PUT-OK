@@ -9,6 +9,7 @@
 
 Solution::Solution(Instance *&instance) {
     this->instance = instance;
+    machine1 = instance->getMachine1(); //to copy Maitenances.
     bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
     std::uniform_int_distribution<unsigned> operationsRange = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 1);
     unsigned n = 0, m1 = 0, m2 = 0;
