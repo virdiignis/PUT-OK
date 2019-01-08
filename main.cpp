@@ -30,10 +30,22 @@ int main() {
         Instance i = Instance();
         SolutionsPool pool(i);
         pool.createSolutions(100);
-
+        pool.ranking();
+        unsigned s1 = pool[0].getScore();
+        std::cout << "Best random score: " << s1 << std::endl;
+        for (int j = 0; j < 100; ++j) {
+            pool.mutate();
+            pool.ranking();
+            pool.breed();
+            pool.ranking();
+            pool.trimEnd();
+        }
+        unsigned s2 = pool[0].getScore();
+        s += s1 - s2;
+        std::cout << "Best heuristic score: " << s2 << std::endl;
 //        if (c.getScore()< a.getScore() && c.getScore() < b.getScore()) s++;
     }
-    std::cout << s / 100000.0;
+    std::cout << s / 100.0;
 
 
     return 0;

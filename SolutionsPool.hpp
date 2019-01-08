@@ -23,7 +23,11 @@ public:
 
     void randomizedRanking();
 
+    void randomize();
+
     void trimEnd();
+
+    void breed();
 
 };
 

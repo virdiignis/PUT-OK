@@ -5,7 +5,7 @@
 #ifndef OK_TUNING_HPP
 #define OK_TUNING_HPP
 
-#define TASKS_NO 4
+#define TASKS_NO 50
 #define MIN_OP_DURATION 1
 #define MAX_OP_DURATION 10
 #define MIN_MAITENANCE_START 0
