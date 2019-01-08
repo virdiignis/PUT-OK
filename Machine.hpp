@@ -29,8 +29,12 @@ public:
 
     void sortMaitenances();
 
+    unsigned getIndex(Operation *);
+
+    void setMaitenances(const std::vector<Maitenance *> &maitenances);
+
 private:
-    std::array<Operation *, TASKS_NO> operations;
+    std::array<Operation *, TASKS_NO> operations = {nullptr};
     std::vector<Maitenance *> maitenances;
 
 };

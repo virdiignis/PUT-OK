@@ -9,8 +9,6 @@
 
 Solution::Solution(Instance *&instance) {
     this->instance = instance;
-    machine1 = instance->getMachine1();
-    machine2 = instance->getMachine2();
     bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
     std::uniform_int_distribution<unsigned> operationsRange = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 1);
     unsigned n = 0, m1 = 0, m2 = 0;
@@ -60,12 +58,13 @@ Solution::Solution(Instance *&instance) {
 
 Solution::Solution(Solution &solution1, Solution &solution2) {
     this->instance = solution1.instance;
+    machine1.setMaitenances(solution1.machine1.getMaitenances());
     bool used[TASKS_NO] = {false};
     for (unsigned i = 0; i < TASKS_NO / 2; ++i) {
         machine1[i] = solution1.machine1[i];
         used[machine1[i]->getTaskNo()] = true;
     }
-    for (unsigned i = 0, m = TASKS_NO / 2; i < TASKS_NO; ++i) {
+    for (unsigned i = 0, m = TASKS_NO / 2; m < TASKS_NO; ++i) {
         if (!used[solution2.machine1[i]->getTaskNo()])
             machine1[m++] = solution2.machine1[i];
     }
@@ -76,9 +75,48 @@ Solution::Solution(Solution &solution1, Solution &solution2) {
     //How to get as close to it as possible? How to define and measure that closeness?
     std::set<Operation *> order;
     for (int k = 0; k < TASKS_NO; ++k) order.insert(solution1.machine2[k]);
-    for (unsigned i = 0, j = 0; i < TASKS_NO / 2; ++i) {
+
+    bool op1s[TASKS_NO] = {false}; //Has Op1_n been already run?
+    unsigned j = 0;
+    for (; j < TASKS_NO && !machine1[j]->isSecond(); j++)
+        op1s[machine1[j]->getTaskNo()] = true; //Run first Op1_n ops on m1.
+
+    for (unsigned i = 0; i < TASKS_NO / 2; ++i) { //TODO maxval
         auto it = order.begin();
+        do {
+            if (!(*it)->isSecond() || op1s[(*it)->getTaskNo()]) {
+                op1s[(*it)->getTaskNo()] = true;
+                while (j < TASKS_NO && (!machine1[j]->isSecond() || op1s[machine1[j]->getTaskNo()]))
+                    op1s[machine1[j++]->getTaskNo()] = true;
+                machine2[i] = *it;
+                order.erase(it);
+                break;
+            }
+        } while (++it != order.end());
+        if (machine2[i] == nullptr) throw std::runtime_error("No possible operation to put here :/");
     }
+
+    auto temp = order;
+    order.clear();
+    for (int k = 0; k < TASKS_NO; ++k) if (temp.count(solution2.machine2[k])) order.insert(solution2.machine2[k]);
+
+    for (unsigned i = TASKS_NO / 2; i < TASKS_NO; ++i) {
+        auto it = order.begin();
+        do {
+            if (!(*it)->isSecond() || op1s[(*it)->getTaskNo()]) {
+                op1s[(*it)->getTaskNo()] = true;
+                while (j < TASKS_NO && (!machine1[j]->isSecond() || op1s[machine1[j]->getTaskNo()]))
+                    op1s[machine1[j++]->getTaskNo()] = true;
+                machine2[i] = *it;
+                order.erase(it);
+                break;
+            }
+        } while (++it != order.end());
+        if (machine2[i] == nullptr) throw std::runtime_error("No possible operation to put here :/");
+    }
+
+    calculate();
+
 }
 
 Solution::Solution(const Solution &solution) {

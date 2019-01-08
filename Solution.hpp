@@ -11,9 +11,9 @@
 class Solution {
 private:
     Machine machine1 = Machine(0), machine2 = Machine(1);
-    Instance *instance;
+    Instance *instance = nullptr;
     std::uniform_int_distribution<unsigned> booleanDist = std::uniform_int_distribution<unsigned>(0, 1);
-    unsigned score;
+    unsigned score = 0;
     void calculate();
 
 public:

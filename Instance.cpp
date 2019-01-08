@@ -70,7 +70,7 @@ const Machine &Instance::getMachine2() const {
     return machine2;
 }
 
-const std::array<Task *, 50> &Instance::getTasks() const {
+const std::array<Task *, TASKS_NO> &Instance::getTasks() const {
     return tasks;
 }
 

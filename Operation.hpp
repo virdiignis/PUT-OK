@@ -26,6 +26,7 @@ public:
      * @param duration
      * @param penalty
      * @param machine
+     * @param number
      * @param task
      */
     Operation(unsigned int start_time, unsigned int duration, unsigned int penalty, bool machine, bool number,

@@ -31,7 +31,7 @@ public:
 
     const Machine &getMachine2() const;
 
-    const std::array<Task *, 50> &getTasks() const;
+    const std::array<Task *, TASKS_NO> &getTasks() const;
 };
 
 

@@ -33,3 +33,16 @@ void Machine::sortMaitenances() {
     std::sort(maitenances.begin(), maitenances.end(), [](Maitenance *a, Maitenance *b) { return a->getStartTime() <
             b->getStartTime(); });
 }
+
+unsigned Machine::getIndex(Operation *ops) {
+    unsigned i = 0;
+    for (auto &op: operations) {
+        if (op == ops) return i;
+        else i++;
+    }
+    throw std::runtime_error("Indexed operation not in machine.");
+}
+
+void Machine::setMaitenances(const std::vector<Maitenance *> &maitenances) {
+    Machine::maitenances = maitenances;
+}
