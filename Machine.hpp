@@ -27,9 +27,7 @@ public:
 
     unsigned getSize();
 
-    void sort_maitenances();
-
-    Machine copy();
+    void sortMaitenances();
 
 private:
     std::array<Operation *, TASKS_NO> operations;

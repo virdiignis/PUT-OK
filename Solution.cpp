@@ -7,10 +7,10 @@
 #include <iostream>
 #include "Solution.hpp"
 
-Solution::Solution(Instance &instance) {
-    this->instance = &instance;
-    machine1 = instance.getMachine1();
-    machine2 = instance.getMachine2();
+Solution::Solution(Instance *&instance) {
+    this->instance = instance;
+    machine1 = instance->getMachine1();
+    machine2 = instance->getMachine2();
     bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
     std::uniform_int_distribution<unsigned> operationsRange = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 1);
     unsigned n = 0, m1 = 0, m2 = 0;
@@ -25,14 +25,14 @@ Solution::Solution(Instance &instance) {
         auto it = order1.begin();
         while (it != order1.end()) {
             n = *it;
-            if (!instance.getTasks()[n]->m1()->isSecond() && !ops1[n]) {
+            if (!instance->getTasks()[n]->m1()->isSecond() && !ops1[n]) {
                 ops1[n] = true;
-                machine1[m1++] = instance.getTasks()[n]->m1();
+                machine1[m1++] = instance->getTasks()[n]->m1();
                 order1.erase(it);
                 break;
-            } else if (instance.getTasks()[n]->m1()->isSecond() && ((ops1[n] && !ops2[n]) || m1 == 48)) {
+            } else if (instance->getTasks()[n]->m1()->isSecond() && ((ops1[n] && !ops2[n]) || m1 == 48)) {
                 ops2[n] = true;
-                machine1[m1++] = instance.getTasks()[n]->m1();
+                machine1[m1++] = instance->getTasks()[n]->m1();
                 order1.erase(it);
                 break;
             }
@@ -41,14 +41,14 @@ Solution::Solution(Instance &instance) {
         it = order2.begin();
         while (it != order2.end()) {
             n = *it;
-            if (!instance.getTasks()[n]->m2()->isSecond() && !ops1[n]) {
+            if (!instance->getTasks()[n]->m2()->isSecond() && !ops1[n]) {
                 ops1[n] = true;
-                machine2[m2++] = instance.getTasks()[n]->m2();
+                machine2[m2++] = instance->getTasks()[n]->m2();
                 order2.erase(it);
                 break;
-            } else if (instance.getTasks()[n]->m2()->isSecond() && ops1[n] && !ops2[n]) {
+            } else if (instance->getTasks()[n]->m2()->isSecond() && ops1[n] && !ops2[n]) {
                 ops2[n] = true;
-                machine2[m2++] = instance.getTasks()[n]->m2();
+                machine2[m2++] = instance->getTasks()[n]->m2();
                 order2.erase(it);
                 break;
             }
@@ -58,9 +58,27 @@ Solution::Solution(Instance &instance) {
     calculate();
 }
 
-Solution::Solution(const Solution &solution1, const Solution &solution2) {
-
-
+Solution::Solution(Solution &solution1, Solution &solution2) {
+    this->instance = solution1.instance;
+    bool used[TASKS_NO] = {false};
+    for (unsigned i = 0; i < TASKS_NO / 2; ++i) {
+        machine1[i] = solution1.machine1[i];
+        used[machine1[i]->getTaskNo()] = true;
+    }
+    for (unsigned i = 0, m = TASKS_NO / 2; i < TASKS_NO; ++i) {
+        if (!used[solution2.machine1[i]->getTaskNo()])
+            machine1[m++] = solution2.machine1[i];
+    }
+    //Machine1 done
+    //here, at 00:06 a.m. I've stumbled upon a philosophical question – how to define order? Is it distance beetween the
+    //beginning and given elements, or is it more about precedence in any given subset of elements? I guess it's more
+    //the latter, but who knows how to apply it, if I can't remain exactly in given order because of the constraints.
+    //How to get as close to it as possible? How to define and measure that closeness?
+    std::set<Operation *> order;
+    for (int k = 0; k < TASKS_NO; ++k) order.insert(solution1.machine2[k]);
+    for (unsigned i = 0, j = 0; i < TASKS_NO / 2; ++i) {
+        auto it = order.begin();
+    }
 }
 
 Solution::Solution(const Solution &solution) {
@@ -68,6 +86,7 @@ Solution::Solution(const Solution &solution) {
     this->instance = solution.instance;
     machine1 = solution.machine1;
     machine2 = solution.machine2;
+    score = solution.score;
 }
 
 void Solution::calculate() {
@@ -115,10 +134,11 @@ void Solution::calculate() {
         lastm1 = m1;
         lastm2 = m2;
     }
+    score = machine1.score() + machine2.score();
 }
 
 unsigned Solution::getScore() const {
-    return machine1.score() + machine2.score();
+    return score;
 }
 
 void Solution::mutate() {
@@ -145,9 +165,5 @@ void Solution::mutate() {
 }
 
 bool Solution::operator<(const Solution &rhs) const {
-    return getScore() < rhs.getScore();
-}
-
-Solution::Solution() {
-
+    return score < rhs.score;
 }

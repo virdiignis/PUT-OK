@@ -9,11 +9,13 @@
 #include <vector>
 #include "Solution.hpp"
 
-class SolutionsPool : std::vector<Solution> {
+class SolutionsPool : public std::vector<Solution> {
 private:
-    std::default_random_engine generator;
+    Instance *instance;
 public:
-    SolutionsPool();
+    explicit SolutionsPool(Instance &);
+
+    void createSolutions(unsigned);
 
     void mutate();
 

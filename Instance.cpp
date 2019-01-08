@@ -6,10 +6,11 @@
 
 #include <algorithm>
 #include <fstream>
+#include <chrono>
 #include "Instance.hpp"
 
 Instance::Instance() {
-    generator.seed(static_cast<unsigned long>(time(nullptr)));
+    generator.seed(static_cast<unsigned long>(std::chrono::system_clock::now().time_since_epoch().count()));
     generateTasks();
     sortTasks();
     generateMaitenances();
@@ -43,7 +44,7 @@ void Instance::generateMaitenances() {
     for (int i = 0; i < MAITENANCES_NO; ++i) {
         machine1.add_maitenance(new Maitenance(maitenance_start(generator), maitenance_duration(generator)));
     }
-    machine1.sort_maitenances();
+    machine1.sortMaitenances();
 
 
 }
@@ -62,11 +63,11 @@ void Instance::toFile(const int number, const std::string filename) {
 }
 
 const Machine &Instance::getMachine1() const {
-    return machine1.copy();
+    return machine1;
 }
 
 const Machine &Instance::getMachine2() const {
-    return machine2.copy();
+    return machine2;
 }
 
 const std::array<Task *, 50> &Instance::getTasks() const {

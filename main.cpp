@@ -1,24 +1,31 @@
 #include <iostream>
 #include <thread>
+#include <algorithm>
 #include "Instance.hpp"
 #include "Solution.hpp"
+#include "SolutionsPool.hpp"
 
 
 int main() {
     Instance i = Instance();
     i.toFile(1, "/home/prance/c/aisd/OK/ins1.txt");
-    auto s = Solution(i);
-    std::cout << s.getScore() << "\n";
-    std::flush(std::cout);
-//    std::this_thread::sleep_for(std::chrono::seconds(1));
-    auto f = Solution(i);
-    std::cout << s.getScore() << "\n";
-    std::cout << f.getScore();
-    std::flush(std::cout);
-//    for (int j = 0; j < 1000; ++j) {
-//        s.mutate();
-//        std::cout << j << "\t" << s.getScore() << "\n";
-//        std::flush(std::cout);
-//    }
+    SolutionsPool p(i);
+    p.createSolutions(1000);
+    for (int d = 0; d < 100; d++) {
+        p.mutate();
+        p.randomizedRanking();
+        p.trimEnd();
+    }
+    SolutionsPool q(i);
+    q.createSolutions(100);
+    for (int d = 0; d < 1000; d++) {
+        q.mutate();
+        q.randomizedRanking();
+        q.trimEnd();
+    }
+//    std::swap(p[0], p[1]);
+    std::cout << p[0].getScore() << "\n" << q[0].getScore();
+
+
     return 0;
 }

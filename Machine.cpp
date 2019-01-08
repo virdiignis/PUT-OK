@@ -29,14 +29,7 @@ unsigned Machine::getSize() {
     return operations.size();
 }
 
-void Machine::sort_maitenances() {
+void Machine::sortMaitenances() {
     std::sort(maitenances.begin(), maitenances.end(), [](Maitenance *a, Maitenance *b) { return a->getStartTime() <
             b->getStartTime(); });
 }
-
-Machine Machine::copy() {
-    auto m = Machine(number);
-    m.maitenances = maitenances;
-    m.operations =
-}
-

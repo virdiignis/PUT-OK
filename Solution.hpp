@@ -13,13 +13,15 @@ private:
     Machine machine1 = Machine(0), machine2 = Machine(1);
     Instance *instance;
     std::uniform_int_distribution<unsigned> booleanDist = std::uniform_int_distribution<unsigned>(0, 1);
+    unsigned score;
     void calculate();
 
 public:
-    Solution();
+    Solution() = default;
 
-    explicit Solution(Instance &instance);
-    Solution(const Solution& solution1, const Solution &solution2);
+    explicit Solution(Instance *&instance);
+
+    Solution(Solution &solution1, Solution &solution2);
     Solution(const Solution& solution);
 
     unsigned getScore() const;
