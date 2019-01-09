@@ -17,7 +17,7 @@ class Machine {
 public:
     explicit Machine(bool number);
 
-    void add_maitenance(Maitenance *);
+    void addMaitenance(Maitenance *m);
 
     Operation *&operator[](unsigned int x);
 

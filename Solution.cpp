@@ -10,7 +10,7 @@
 Solution::Solution(Instance *&instance) {
     this->instance = instance;
     machine1 = instance->getMachine1(); //to copy Maitenances.
-    bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
+    bool ops1[TASKS_NO] = {false};
     unsigned n = 0, m1 = 0, m2 = 0;
     std::vector<unsigned> order1, order2;
     for (unsigned j = 0; j < TASKS_NO; ++j) {
@@ -29,7 +29,6 @@ Solution::Solution(Instance *&instance) {
                 order1.erase(it);
                 break;
             } else if (ops1[n] || m1 == TASKS_NO - 2) {
-                ops2[n] = true;
                 machine1[m1++] = instance->getTasks()[n]->m1();
                 order1.erase(it);
                 break;
@@ -45,7 +44,6 @@ Solution::Solution(Instance *&instance) {
                 order2.erase(it);
                 break;
             } else if (ops1[n]) {
-                ops2[n] = true;
                 machine2[m2++] = instance->getTasks()[n]->m2();
                 order2.erase(it);
                 break;

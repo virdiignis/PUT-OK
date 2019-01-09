@@ -30,7 +30,7 @@ int main() {
     std::future<double> futures[100];
     Instance instances[100];
 
-    for (unsigned generationSize = 1; generationSize < 100; ++generationSize) {
+    for (unsigned generationSize = 1; generationSize < 4; ++generationSize) {
         double avgPercentImprvSum = 0;
         for (unsigned k = 0; k < 100 / THREADS; k++) {
             for (unsigned i = 0; i < THREADS; ++i) {

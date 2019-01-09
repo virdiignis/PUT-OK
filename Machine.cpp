@@ -7,7 +7,7 @@
 
 Machine::Machine(bool number) : number(number) {}
 
-void Machine::add_maitenance(Maitenance *m) {
+void Machine::addMaitenance(Maitenance *m) {
     maitenances.push_back(m);
 }
 
