@@ -21,12 +21,12 @@ Task *Instance::generateTask(unsigned i) {
     auto machine_swap = static_cast<bool>(machineDist(generator));
     t->setOp1(new Operation(0, durationDist(generator), 0, machine_swap, 0, t));
     t->setOp2(new Operation(0, durationDist(generator), 0, !machine_swap, 1, t));
-    t->setReadyTime(ready_timeDist(generator));
+    t->setReadyTime(readyTimeDist(generator));
     return t;
 }
 
 void Instance::generateTasks() {
-    for (int i = 0; i < TASKS_NO; ++i) tasks[i] = generateTask(i);
+    for (unsigned i = 0; i < TASKS_NO; ++i) tasks[i] = generateTask(i);
 }
 
 void Instance::sortTasks() {
@@ -35,7 +35,7 @@ void Instance::sortTasks() {
 
 void Instance::generateMaitenances() {
     unsigned sum = 0;
-    for (auto &t: tasks) sum += t->getOp1()->getDuration();
+    for (auto &t: tasks) sum += t->m1()->getDuration();
     std::uniform_int_distribution<unsigned> maitenance_start = std::uniform_int_distribution<unsigned>(
             MIN_MAITENANCE_START, sum);
     std::uniform_int_distribution<unsigned> maitenance_duration = std::uniform_int_distribution<unsigned>(

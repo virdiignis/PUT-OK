@@ -11,7 +11,6 @@ Solution::Solution(Instance *&instance) {
     this->instance = instance;
     machine1 = instance->getMachine1(); //to copy Maitenances.
     bool ops1[TASKS_NO] = {false}, ops2[TASKS_NO] = {false};
-    std::uniform_int_distribution<unsigned> operationsRange = std::uniform_int_distribution<unsigned>(0, TASKS_NO - 1);
     unsigned n = 0, m1 = 0, m2 = 0;
     std::vector<unsigned> order1, order2;
     for (unsigned j = 0; j < TASKS_NO; ++j) {
@@ -24,12 +23,12 @@ Solution::Solution(Instance *&instance) {
         auto it = order1.begin();
         while (it != order1.end()) {
             n = *it;
-            if (!instance->getTasks()[n]->m1()->isSecond() && !ops1[n]) {
+            if (!instance->getTasks()[n]->m1()->isSecond()) {
                 ops1[n] = true;
                 machine1[m1++] = instance->getTasks()[n]->m1();
                 order1.erase(it);
                 break;
-            } else if (instance->getTasks()[n]->m1()->isSecond() && ((ops1[n] && !ops2[n]) || m1 == 48)) {
+            } else if (ops1[n] || m1 == TASKS_NO - 2) {
                 ops2[n] = true;
                 machine1[m1++] = instance->getTasks()[n]->m1();
                 order1.erase(it);
@@ -40,12 +39,12 @@ Solution::Solution(Instance *&instance) {
         it = order2.begin();
         while (it != order2.end()) {
             n = *it;
-            if (!instance->getTasks()[n]->m2()->isSecond() && !ops1[n]) {
+            if (!instance->getTasks()[n]->m2()->isSecond()) {
                 ops1[n] = true;
                 machine2[m2++] = instance->getTasks()[n]->m2();
                 order2.erase(it);
                 break;
-            } else if (instance->getTasks()[n]->m2()->isSecond() && ops1[n] && !ops2[n]) {
+            } else if (ops1[n]) {
                 ops2[n] = true;
                 machine2[m2++] = instance->getTasks()[n]->m2();
                 order2.erase(it);
@@ -117,7 +116,6 @@ Solution::Solution(Solution &solution1, Solution &solution2) {
     }
 
     calculate();
-
 }
 
 Solution::Solution(const Solution &solution) {

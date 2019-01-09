@@ -14,7 +14,10 @@ class Instance {
     std::array<Task*, TASKS_NO> tasks;
     std::uniform_int_distribution<unsigned> durationDist = std::uniform_int_distribution<unsigned>(MIN_OP_DURATION,MAX_OP_DURATION);
     std::uniform_int_distribution<unsigned > machineDist = std::uniform_int_distribution<unsigned>(0, 1);
-    std::uniform_int_distribution<unsigned> ready_timeDist = std::uniform_int_distribution<unsigned>(0, (MIN_OP_DURATION + MAX_OP_DURATION) * TASKS_NO /4);
+    std::uniform_int_distribution<unsigned> readyTimeDist = std::uniform_int_distribution<unsigned>(0,
+                                                                                                    (MIN_OP_DURATION +
+                                                                                                     MAX_OP_DURATION) *
+                                                                                                    TASKS_NO / 4);
 
     void generateTasks();
     Task * generateTask(unsigned);

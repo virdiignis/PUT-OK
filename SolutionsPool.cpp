@@ -20,29 +20,30 @@ void SolutionsPool::ranking() {
 }
 
 void SolutionsPool::trimEnd() {
-    this->resize(GENERATION_SIZE);
+    this->resize(generationSize);
 }
 
-SolutionsPool::SolutionsPool(Instance &instance) : instance(&instance) {
-    this->reserve(GENERATION_SIZE * 2);
+SolutionsPool::SolutionsPool(Instance &instance, unsigned gs) : instance(&instance), generationSize(gs) {
+    this->reserve(gs * 4);
+    createSolutions(gs);
 }
 
-void SolutionsPool::randomizedRanking() {
+void SolutionsPool::randomizedRanking(unsigned int untouchedTop, unsigned int untouchedEnd) {
     ranking();
 //    std::default_random_engine generator;
 
-    std::shuffle(this->begin() + (GENERATION_SIZE / 4), this->end() - GENERATION_SIZE / 4, instance->generator);
+    std::shuffle(this->begin() + untouchedTop, this->end() - untouchedEnd, instance->generator);
 }
 
 void SolutionsPool::createSolutions(unsigned i) {
-    for (int j = 0; j < i; ++j) {
+    for (unsigned j = 0; j < i; ++j) {
         this->emplace_back(instance);
     }
 }
 
 void SolutionsPool::breed() {
     const unsigned long s = size();
-    for (int i = 0; i < s; i += 2) {
+    for (unsigned i = 0; i < s; i += 2) {
         this->push_back(Solution((*this)[i], (*this)[i + 1]));
     }
 }

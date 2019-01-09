@@ -12,8 +12,9 @@
 class SolutionsPool : public std::vector<Solution> {
 private:
     Instance *instance;
+    unsigned generationSize = 0;
 public:
-    explicit SolutionsPool(Instance &);
+    explicit SolutionsPool(Instance &, unsigned);
 
     void createSolutions(unsigned);
 
@@ -21,7 +22,7 @@ public:
 
     void ranking();
 
-    void randomizedRanking();
+    void randomizedRanking(unsigned, unsigned);
 
     void randomize();
 
