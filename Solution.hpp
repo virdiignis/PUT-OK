@@ -30,7 +30,7 @@ public:
 
     bool operator<(const Solution &rhs) const;
 
-    void toFile();
+    void toFile(unsigned startpoint);
 
 };
 

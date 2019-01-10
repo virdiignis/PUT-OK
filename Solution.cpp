@@ -204,17 +204,18 @@ bool Solution::operator<(const Solution &rhs) const {
     return score < rhs.score;
 }
 
-void Solution::toFile() {
+void Solution::toFile(unsigned startpoint) {
     std::ofstream ofstream(
             "/home/prance/OK/solutions/I" + std::to_string(instance->getNumber()) + "S" + std::to_string(number) +
             ".txt");
     ofstream << "****" << instance->getNumber() << "****\n";
-    ofstream << score << "\n" << "M1:";
-    unsigned m = 0, o = 0, i = 0, end = 0, idle = 0;
+    ofstream << score << ";" << startpoint << "\n" << "M1:";
+    unsigned m = 0, o = 0, i = 0, end = 0, idle = 0, idle1sum = 0;
     for (unsigned t = 0; t < std::max(machine1.getEnd(), machine2.getEnd()); ++t) {
         if (idle && (machine1[o]->getStartTime() == t || machine1.getMaitenances()[m]->getStartTime() == t)) {
             ofstream << "idle" << ++i << "_M1," << end + 1 << "," << idle << ";";
             end = end + idle;
+            idle1sum += idle;
             idle = 0;
         }
         if (o < TASKS_NO && machine1[o]->getStartTime() == t) {
@@ -232,11 +233,14 @@ void Solution::toFile() {
     }
     if (idle) ofstream << "idle" << ++i << "_M1," << end + 1 << "," << idle << ";";
     ofstream << std::endl << "M2:";
+    const unsigned idle1 = i;
+    unsigned idle2sum = 0;
     o = 0, i = 0, end = 0, idle = 0;
     for (unsigned t = 0; t < std::max(machine1.getEnd(), machine2.getEnd()); ++t) {
         if (idle && machine2[o]->getStartTime() == t) {
             ofstream << "idle" << ++i << "_M2," << end + 1 << "," << idle << ";";
             end = end + idle;
+            idle2sum += idle;
             idle = 0;
         }
         if (o < TASKS_NO && machine2[o]->getStartTime() == t) {
@@ -247,9 +251,15 @@ void Solution::toFile() {
         } else if (t > end) idle++;
         if (o == TASKS_NO) o--;
     }
-    if (idle) ofstream << "idle" << ++i << "_M2," << end + 1 << "," << idle << ";";
+    if (idle) ofstream << "idle" << ++i << "_M2," << end + 1 << "," << idle << ";" << std::endl;
 
+    unsigned sum = 0;
+    for (auto &item: machine1.getMaitenances()) sum += item->getDuration();
 
+    ofstream << MAITENANCES_NO << "," << sum << std::endl;
+    ofstream << 0 << "," << 0 << std::endl;
+    ofstream << idle1 << "," << idle1sum << std::endl;
+    ofstream << i << "," << idle2sum << std::endl;
 
 
     ofstream.close();
