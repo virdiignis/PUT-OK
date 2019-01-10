@@ -13,8 +13,9 @@ private:
     Machine machine1 = Machine(0), machine2 = Machine(1);
     Instance *instance = nullptr;
     std::uniform_int_distribution<unsigned> booleanDist = std::uniform_int_distribution<unsigned>(0, 1);
-    unsigned score = 0;
+    unsigned score = 0, number = static_cast<unsigned int>(rand());
     void calculate();
+
 
 public:
     Solution() = default;
@@ -29,6 +30,7 @@ public:
 
     bool operator<(const Solution &rhs) const;
 
+    void toFile();
 
 };
 

@@ -18,7 +18,7 @@ class Instance {
                                                                                                     (MIN_OP_DURATION +
                                                                                                      MAX_OP_DURATION) *
                                                                                                     TASKS_NO / 4);
-
+    unsigned number = static_cast<unsigned int>(rand());
     void generateTasks();
     Task * generateTask(unsigned);
     void sortTasks();
@@ -28,7 +28,10 @@ public:
     std::default_random_engine generator;
 
     Instance();
-    void toFile(int, std::string);
+
+    void toFile();
+
+    unsigned int getNumber() const;
 
     const Machine &getMachine1() const;
 

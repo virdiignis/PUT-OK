@@ -19,7 +19,7 @@ unsigned int Operation::getEnd() {
 
 void Operation::setStartTime(unsigned int start_time) {
     if (!number && start_time < task->getReadyTime()) throw NotReadyException();
-    if (number && start_time < task->other(this)->getEnd()) throw SecondBeforeFirstException();
+//    if (number && start_time < task->other(this)->getEnd()) throw SecondBeforeFirstException();
     Employ::setStartTime(start_time);
 }
 

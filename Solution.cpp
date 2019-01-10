@@ -5,6 +5,7 @@
 #include <set>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include "Solution.hpp"
 
 Solution::Solution(Instance *&instance) {
@@ -201,4 +202,24 @@ void Solution::mutate() {
 
 bool Solution::operator<(const Solution &rhs) const {
     return score < rhs.score;
+}
+
+void Solution::toFile() {
+    std::ofstream ofstream(
+            "/home/prance/OK/solutions/I" + std::to_string(instance->getNumber()) + "S" + std::to_string(number) +
+            ".txt");
+    ofstream << "****" << instance->getNumber() << "****\n";
+    ofstream << score << "\n" << "M1:";
+    unsigned m = 0;
+    for (unsigned i = 0; i < TASKS_NO; ++i) {
+        auto op = machine1[i];
+        ofstream << "op" << static_cast<unsigned>(op->isSecond()) + 1 << "_" << op->getTaskNo() << "," <<
+                 op->getStartTime() << "," << op->getDuration() << "," << op->getEnd() - op->getStartTime() << ";";
+        if (machine1[i]->getPenalty()) for (; m < machine1.getMaitenances().size() &&
+                                              machine1.getMaitenances()[m]->getStartTime() <= op->getEnd() + 1; m++)
+
+    }
+
+
+    ofstream.close();
 }

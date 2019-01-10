@@ -47,8 +47,8 @@ void Instance::generateMaitenances() {
     machine1.sortMaitenances();
 }
 
-void Instance::toFile(const int number, const std::string filename) {
-    std::ofstream ofstream(filename);
+void Instance::toFile() {
+    std::ofstream ofstream("/home/prance/OK/instances/I" + std::to_string(number) + ".txt");
     ofstream << "****" << number << "****\n";
     ofstream << TASKS_NO << "\n";
     for (auto t: tasks)
@@ -70,6 +70,10 @@ const Machine &Instance::getMachine2() const {
 
 const std::array<Task *, TASKS_NO> &Instance::getTasks() const {
     return tasks;
+}
+
+unsigned int Instance::getNumber() const {
+    return number;
 }
 
 
