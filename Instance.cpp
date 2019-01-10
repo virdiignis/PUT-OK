@@ -42,7 +42,17 @@ void Instance::generateMaitenances() {
             MIN_MAITENANCE_DURATION, MAX_MAITENANCE_DURATION);
 
     for (int i = 0; i < MAITENANCES_NO; ++i) {
-        machine1.addMaitenance(new Maitenance(maitenance_start(generator), maitenance_duration(generator)));
+        Maitenance *m = nullptr;
+        bool ok;
+        do {
+            m = new Maitenance(maitenance_start(generator), maitenance_duration(generator));
+            ok = true;
+            for (auto &ma: machine1.getMaitenances()) {
+                if (m->getStartTime() > ma->getStartTime() && m->getStartTime() < ma->getEnd()) ok = false;
+                if (m->getEnd() > ma->getStartTime() && m->getEnd() < ma->getEnd()) ok = false;
+            }
+        } while (!ok);
+        machine1.addMaitenance(m);
     }
     machine1.sortMaitenances();
 }

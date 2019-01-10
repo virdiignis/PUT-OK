@@ -8,7 +8,7 @@
 #include <fstream>
 #include "Solution.hpp"
 
-Solution::Solution(Instance *&instance) {
+Solution::Solution(Instance *instance) {
     this->instance = instance;
     machine1 = instance->getMachine1(); //to copy Maitenances.
     bool ops1[TASKS_NO] = {false};
@@ -210,14 +210,25 @@ void Solution::toFile() {
             ".txt");
     ofstream << "****" << instance->getNumber() << "****\n";
     ofstream << score << "\n" << "M1:";
-    unsigned m = 0;
-    for (unsigned i = 0; i < TASKS_NO; ++i) {
-        auto op = machine1[i];
-        ofstream << "op" << static_cast<unsigned>(op->isSecond()) + 1 << "_" << op->getTaskNo() << "," <<
-                 op->getStartTime() << "," << op->getDuration() << "," << op->getEnd() - op->getStartTime() << ";";
-        if (machine1[i]->getPenalty()) for (; m < machine1.getMaitenances().size() &&
-                                              machine1.getMaitenances()[m]->getStartTime() <= op->getEnd() + 1; m++)
-
+    unsigned m = 0, o = 0, i = 0, end = 0, idle = 0;
+    for (unsigned t = 0; t < score; ++t) {
+        if (idle && (machine1[o]->getStartTime() == t || machine1.getMaitenances()[m]->getStartTime() == t)) {
+            ofstream << "idle" << ++i << "_M1," << end + 1 << "," << idle << ";";
+            end = end + idle;
+            idle = 0;
+        }
+        if (o < TASKS_NO && machine1[o]->getStartTime() == t) {
+            auto op = machine1[o++];
+            ofstream << "op" << static_cast<unsigned>(op->isSecond()) + 1 << "_" << op->getTaskNo() << "," <<
+                     op->getStartTime() << "," << op->getDuration() << "," << op->getEnd() - op->getStartTime() << ";";
+            end = op->getEnd();
+        } else if (m < machine1.getMaitenances().size() && machine1.getMaitenances()[m]->getStartTime() == t) {
+            auto mai = machine1.getMaitenances()[m++];
+            ofstream << "maint" << m << "_M1," << mai->getStartTime() << "," << mai->getDuration() << ";";
+            end = mai->getEnd();
+        } else if (t > end) idle++;
+        if (o == TASKS_NO) o--;
+        if (m == machine1.getMaitenances().size()) m--;
     }
 
 

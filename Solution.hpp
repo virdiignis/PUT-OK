@@ -20,7 +20,7 @@ private:
 public:
     Solution() = default;
 
-    explicit Solution(Instance *&instance);
+    explicit Solution(Instance *instance);
 
     Solution(Solution &solution1, Solution &solution2);
     Solution(const Solution& solution);
