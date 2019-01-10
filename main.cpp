@@ -7,7 +7,7 @@
 #include "SolutionsPool.hpp"
 #include <future>
 
-#define THREADS 8
+#define THREADS 4
 #define RUNTIME 5
 
 double f(Instance instance) {
@@ -47,39 +47,41 @@ double g(Instance instance) {
         pool.trimEnd();
 //        ++i;
     }
+
+    pool[0].toFile();
 //    std::cout << i << std::endl;
     return 1.0 - (double) pool[0].getScore() / randomScore;
 }
 
 int main() {
     srand(static_cast<unsigned int>(time(nullptr)));
-//    std::ofstream file("/home/prance/CLionProjects/PUT-OK/logBreedImprvOverRuns.txt", std::ofstream::app);
-//
-//    std::future<double> futures[1000];
-//    Instance instances[100];
-////    for(unsigned i = 0; i< 100 ; i++) instances[i] = Instance();
-//
-////    for (unsigned unrandomedTop = 0; unrandomedTop < 100; unrandomedTop++) {
-//    double Rf = 0, Rg = 0;
-//    for (unsigned k = 0; k < 100 / THREADS; k++) {
-//        for (unsigned i = 0; i < THREADS; ++i) {
-//            futures[k * THREADS + i] = std::async(std::launch::async, f, instances[k * THREADS + i]);
-//        }
-//        for (unsigned i = 0; i < THREADS; ++i) {
-//            Rf += futures[k * THREADS + i].get();
-//        }
-//        for (unsigned i = 0; i < THREADS; ++i) {
-//            futures[k * THREADS + i] = std::async(std::launch::async, g, instances[k * THREADS + i]);
-//        }
-//        for (unsigned i = 0; i < THREADS; ++i) {
-//            Rg += futures[k * THREADS + i].get();
-//        }
-//    }
-////        std::cout << avgPercentImprvSum << std::endl;
-//    file << Rf << " " << Rg / 10.0 << std::endl;
-//    std::cout << Rf << " " << Rg << std::endl;
-//    file.flush();
-//
-//    file.close();
+    std::ofstream file("/home/prance/OK/MtCvsCtM.txt", std::ofstream::app);
+
+    std::future<double> futures[1000];
+    Instance instances[1000];
+    for (auto &instance : instances) instance.toFile();
+
+//    for (unsigned unrandomedTop = 0; unrandomedTop < 100; unrandomedTop++) {
+    double Rf = 0, Rg = 0;
+    for (unsigned k = 0; k < 1000 / THREADS; k++) {
+        for (unsigned i = 0; i < THREADS; ++i) {
+            futures[k * THREADS + i] = std::async(std::launch::async, f, instances[k * THREADS + i]);
+        }
+        for (unsigned i = 0; i < THREADS; ++i) {
+            Rf += futures[k * THREADS + i].get();
+        }
+        for (unsigned i = 0; i < THREADS; ++i) {
+            futures[k * THREADS + i] = std::async(std::launch::async, g, instances[k * THREADS + i]);
+        }
+        for (unsigned i = 0; i < THREADS; ++i) {
+            Rg += futures[k * THREADS + i].get();
+        }
+    }
+//        std::cout << avgPercentImprvSum << std::endl;
+    file << Rf / 10.0 << " " << Rg / 10.0 << std::endl;
+    std::cout << Rf / 10.0 << " " << Rg / 10.0 << std::endl;
+    file.flush();
+
+    file.close();
     return 0;
 }
