@@ -33,6 +33,8 @@ public:
 
     void setMaitenances(const std::vector<Maitenance *> &maitenances);
 
+    unsigned getEnd();
+
 private:
     std::array<Operation *, TASKS_NO> operations = {nullptr};
     std::vector<Maitenance *> maitenances;

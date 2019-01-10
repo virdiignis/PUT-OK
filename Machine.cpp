@@ -46,3 +46,7 @@ unsigned Machine::getIndex(Operation *ops) {
 void Machine::setMaitenances(const std::vector<Maitenance *> &maitenances) {
     Machine::maitenances = maitenances;
 }
+
+unsigned Machine::getEnd() {
+    return operations[operations.size() - 1]->getEnd();
+}

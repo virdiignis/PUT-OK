@@ -81,11 +81,5 @@ int main() {
 //    file.flush();
 //
 //    file.close();
-
-    Instance i;
-    std::cout << "Dupa";
-    Solution s(&i);
-    std::cout << "Dupa2";
-    s.toFile();
     return 0;
 }

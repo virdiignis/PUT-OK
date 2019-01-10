@@ -211,7 +211,7 @@ void Solution::toFile() {
     ofstream << "****" << instance->getNumber() << "****\n";
     ofstream << score << "\n" << "M1:";
     unsigned m = 0, o = 0, i = 0, end = 0, idle = 0;
-    for (unsigned t = 0; t < score; ++t) {
+    for (unsigned t = 0; t < std::max(machine1.getEnd(), machine2.getEnd()); ++t) {
         if (idle && (machine1[o]->getStartTime() == t || machine1.getMaitenances()[m]->getStartTime() == t)) {
             ofstream << "idle" << ++i << "_M1," << end + 1 << "," << idle << ";";
             end = end + idle;
@@ -230,6 +230,26 @@ void Solution::toFile() {
         if (o == TASKS_NO) o--;
         if (m == machine1.getMaitenances().size()) m--;
     }
+    if (idle) ofstream << "idle" << ++i << "_M1," << end + 1 << "," << idle << ";";
+    ofstream << std::endl << "M2:";
+    o = 0, i = 0, end = 0, idle = 0;
+    for (unsigned t = 0; t < std::max(machine1.getEnd(), machine2.getEnd()); ++t) {
+        if (idle && machine2[o]->getStartTime() == t) {
+            ofstream << "idle" << ++i << "_M2," << end + 1 << "," << idle << ";";
+            end = end + idle;
+            idle = 0;
+        }
+        if (o < TASKS_NO && machine2[o]->getStartTime() == t) {
+            auto op = machine2[o++];
+            ofstream << "op" << static_cast<unsigned>(op->isSecond()) + 1 << "_" << op->getTaskNo() << "," <<
+                     op->getStartTime() << "," << op->getDuration() << "," << op->getEnd() - op->getStartTime() << ";";
+            end = op->getEnd();
+        } else if (t > end) idle++;
+        if (o == TASKS_NO) o--;
+    }
+    if (idle) ofstream << "idle" << ++i << "_M2," << end + 1 << "," << idle << ";";
+
+
 
 
     ofstream.close();
