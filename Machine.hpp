@@ -10,20 +10,22 @@
 #include <vector>
 #include "tuning.hpp"
 #include "Operation.hpp"
-#include "Maitenance.hpp"
+#include "Maintenance.hpp"
 
 class Machine {
     bool number = false;
+    std::array<Operation *, TASKS_NO> operations = {nullptr};
+    std::vector<Maintenance *> maintenances;
 public:
     explicit Machine(bool number);
 
-    void addMaitenance(Maitenance *m);
+    void addMaitenance(Maintenance *m);
 
     Operation *&operator[](unsigned int x);
 
     unsigned int score() const;
 
-    const std::vector<Maitenance *> &getMaitenances() const;
+    const std::vector<Maintenance *> &getMaitenances() const;
 
     unsigned getSize();
 
@@ -31,13 +33,10 @@ public:
 
     unsigned getIndex(Operation *);
 
-    void setMaitenances(const std::vector<Maitenance *> &maitenances);
+    void setMaitenances(const std::vector<Maintenance *> &maitenances);
 
     unsigned getEnd();
 
-private:
-    std::array<Operation *, TASKS_NO> operations = {nullptr};
-    std::vector<Maitenance *> maitenances;
 
 };
 

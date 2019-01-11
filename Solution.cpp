@@ -206,7 +206,7 @@ bool Solution::operator<(const Solution &rhs) const {
 
 void Solution::toFile(unsigned startpoint) {
     std::ofstream ofstream(
-            "/home/prance/OK/solutions/I" + std::to_string(instance->getNumber()) + "S" + std::to_string(number) +
+            "OKf/solutions/I" + std::to_string(instance->getNumber()) + "S" + std::to_string(number) +
             ".txt");
     ofstream << "****" << instance->getNumber() << "****\n";
     ofstream << score << ";" << startpoint << "\n" << "M1:";

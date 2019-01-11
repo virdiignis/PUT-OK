@@ -42,10 +42,10 @@ void Instance::generateMaitenances() {
             MIN_MAITENANCE_DURATION, MAX_MAITENANCE_DURATION);
 
     for (int i = 0; i < MAITENANCES_NO; ++i) {
-        Maitenance *m = nullptr;
+        Maintenance *m = nullptr;
         bool ok;
         do {
-            m = new Maitenance(maitenance_start(generator), maitenance_duration(generator));
+            m = new Maintenance(maitenance_start(generator), maitenance_duration(generator));
             ok = true;
             for (auto &ma: machine1.getMaitenances()) {
                 if (m->getStartTime() > ma->getStartTime() && m->getStartTime() < ma->getEnd()) ok = false;
@@ -58,7 +58,7 @@ void Instance::generateMaitenances() {
 }
 
 void Instance::toFile() {
-    std::ofstream ofstream("/home/prance/OK/instances/I" + std::to_string(number) + ".txt");
+    std::ofstream ofstream("OKf/instances/I" + std::to_string(number) + ".txt");
     ofstream << "****" << number << "****\n";
     ofstream << TASKS_NO << "\n";
     for (auto t: tasks)

@@ -3,7 +3,7 @@
 //
 #include <cmath>
 #include "Operation.hpp"
-#include "Maitenance.hpp"
+#include "Maintenance.hpp"
 
 Operation::Operation(unsigned int start_time, unsigned int duration, unsigned int penalty, bool machine, bool number,
                      Task *task) : Employ(start_time, duration), penalty(penalty), machine(machine), task(task),
@@ -44,7 +44,7 @@ unsigned Operation::getReadyTime() {
     return 0;
 }
 
-void Operation::disturbed(Maitenance *& m) {
+void Operation::disturbed(Maintenance *&m) {
     if (!penalty)
         penalty = static_cast<unsigned int>(m->getDuration() + std::ceil((float)duration / 2.0));
     else

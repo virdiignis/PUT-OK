@@ -7,8 +7,8 @@
 
 Machine::Machine(bool number) : number(number) {}
 
-void Machine::addMaitenance(Maitenance *m) {
-    maitenances.push_back(m);
+void Machine::addMaitenance(Maintenance *m) {
+    maintenances.push_back(m);
 }
 
 Operation *&Machine::operator[](unsigned int x) {
@@ -21,8 +21,8 @@ unsigned int Machine::score() const {
     return sum;
 }
 
-const std::vector<Maitenance *> &Machine::getMaitenances() const {
-    return maitenances;
+const std::vector<Maintenance *> &Machine::getMaitenances() const {
+    return maintenances;
 }
 
 unsigned Machine::getSize() {
@@ -30,8 +30,9 @@ unsigned Machine::getSize() {
 }
 
 void Machine::sortMaitenances() {
-    std::sort(maitenances.begin(), maitenances.end(), [](Maitenance *a, Maitenance *b) { return a->getStartTime() <
-            b->getStartTime(); });
+    std::sort(maintenances.begin(), maintenances.end(), [](Maintenance *a, Maintenance *b) {
+        return a->getStartTime() <
+               b->getStartTime(); });
 }
 
 unsigned Machine::getIndex(Operation *ops) {
@@ -43,8 +44,8 @@ unsigned Machine::getIndex(Operation *ops) {
     throw std::runtime_error("Indexed operation not in machine.");
 }
 
-void Machine::setMaitenances(const std::vector<Maitenance *> &maitenances) {
-    Machine::maitenances = maitenances;
+void Machine::setMaitenances(const std::vector<Maintenance *> &maitenances) {
+    Machine::maintenances = maitenances;
 }
 
 unsigned Machine::getEnd() {

@@ -9,7 +9,7 @@
 #include "Employ.hpp"
 #include "Task.hpp"
 #include "Exceptions.hpp"
-#include "Maitenance.hpp"
+#include "Maintenance.hpp"
 
 class Task;
 
@@ -50,7 +50,7 @@ unsigned getTaskNo();
 
     unsigned getReadyTime();
 
-    void disturbed(Maitenance*&);
+    void disturbed(Maintenance *&);
 
     void resetPenalty();
 };

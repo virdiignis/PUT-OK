@@ -8,9 +8,9 @@
 
 #include "Employ.hpp"
 
-class Maitenance: public Employ {
+class Maintenance : public Employ {
 public:
-    Maitenance(unsigned int start_time, unsigned int duration);
+    Maintenance(unsigned int start_time, unsigned int duration);
 };
 
 
